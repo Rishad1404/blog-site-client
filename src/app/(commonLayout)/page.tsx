@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { userService } from "@/services/user.service";
+import { blogService } from "@/services/blog.service";
 
 
 export default async function Home() {
 
-  const {data}=await userService.getSession();
+  const {data}=await blogService.getBlogPosts();
   console.log(data);
 
   return (
