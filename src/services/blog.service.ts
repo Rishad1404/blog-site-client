@@ -1,21 +1,24 @@
-import { env } from "@/env"
+import { env } from "@/env";
 
-const API_URL=env.API_URL;
-export const blogService={
-    getBlogPosts:async function(){
-       try {
-         const res=await fetch(`${API_URL}/posts`)
-         const data=await res.json()
+//* No Dynamic and No { cache: no-store } : SSG -> Static Page
+//* { cache: no-store } : SSR -> Dynamic Page
+//* next: { revalidate: 10 } : ISR -> Mix between static and dynamic
 
-        // This is an example
-        // if(data.success){
-        // return
-        // }
+const API_URL = env.API_URL;
+export const blogService = {
+  getBlogPosts: async function () {
+    try {
+      const res = await fetch(`${API_URL}/posts`);
+      const data = await res.json();
 
-         return {data:data,error:null}
-         
-       } catch (error) {
-            return {data:null,error:{message:"Something Went Wrong"}}
-       }
+      // This is an example
+      // if(data.success){
+      // return
+      // }
+
+      return { data: data, error: null };
+    } catch (error) {
+      return { data: null, error: { message: "Something Went Wrong" } };
     }
-}
+  },
+};
