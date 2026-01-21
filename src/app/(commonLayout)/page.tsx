@@ -9,7 +9,6 @@ export default async function Home() {
     cache:"no-store"
 
   });
-  console.log(data);
   return (
     <div className="grid grid-cols-3 max-w-7xl mx-auto gap-5">
       {data?.data?.map((post: BlogPost) => (
