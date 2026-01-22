@@ -30,6 +30,7 @@ export const blogService = {
             url.searchParams.append(key, value);
           }
         });
+      }
 
         const config: RequestInit = {};
         if (options?.cache) {
@@ -49,8 +50,8 @@ export const blogService = {
         // }
 
         return { data: data, error: null };
-      }
-    } catch (error) {
+      
+    } catch (err) {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
