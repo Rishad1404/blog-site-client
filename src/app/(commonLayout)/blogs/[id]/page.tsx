@@ -9,13 +9,13 @@ import { BlogPost } from "@/types";
 //* [ { id: asdfasdfasd }, {id : asdfasdadsfa}, {id: asdfasdfasfasd} ]
 
 export async function generateStaticParams() {
-  const result = await blogService.getBlogPosts();
+  const {data} = await blogService.getBlogPosts();
 
-  if (!result || result.error || !result.data) {
+  if (!Array.isArray(data)) {
     return [];
   }
 
-  return result?.data?.map((blog: BlogPost) => ({ id: blog.id })).splice(0, 3);
+  return data?.map((blog: BlogPost) => ({ id: blog.id })).splice(0, 3);
 }
 
 export default async function BlogPage({

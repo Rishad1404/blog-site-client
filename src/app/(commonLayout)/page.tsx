@@ -3,7 +3,7 @@ import { blogService } from "@/services/blog.service";
 import { BlogPost } from "@/types";
 
 export default async function Home() {
-  const response = await blogService.getBlogPosts(
+  const {data} = await blogService.getBlogPosts(
     {
       isFeatured: false,
     },
@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <div className="grid grid-cols-3 max-w-7xl mx-auto gap-5">
-      {response?.data?.data?.map((post: BlogPost) => (
+      {data?.data?.map((post: BlogPost) => (
         <BlogCard key={post.id} post={post} />
       ))}
     </div>
