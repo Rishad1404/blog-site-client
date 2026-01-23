@@ -10,7 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 const formSchema = z.object({
@@ -30,7 +32,19 @@ export function RegisterForm({ ...props }: React.ComponentProps<typeof Card>) {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      const toastId= toast.loading("Creating User")
+      try {
+        const {data,error}=await authClient.signUp.email(value);
+
+        if(error){
+          toast.error(error.message,{id:toastId});
+          return;
+        }
+        toast.success("User created Successfully",{id:toastId});
+
+      } catch (err) {
+        toast.error("Something went wrong, please try again.",{id:toastId})
+      }
     },
   });
 
