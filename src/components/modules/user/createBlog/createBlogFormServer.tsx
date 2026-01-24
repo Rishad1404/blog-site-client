@@ -10,11 +10,44 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { env } from "@/env";
+import { revalidateTag, updateTag } from "next/cache";
+import { cookies } from "next/headers";
+
+const API_URL=env.API_URL
 
 export default function CreateBlogFormServer() {
   const createBlog = async (formData: FormData) => {
     "use server";
-    console.log(formData.get("title"));
+
+    const title = formData.get("title") as string;
+    const content = formData.get("content") as string;
+    const tags = formData.get("tags") as string;
+
+    const blogData = {
+      title,
+      content,
+      tags: tags
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item) => item !== ""),
+    };
+    
+    const cookieStore=await cookies()
+
+    const res= await fetch(`${API_URL}/posts`,{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Cookie:cookieStore.toString()
+        },
+        body:JSON.stringify(blogData)
+    })
+
+    if(res.ok){
+        revalidateTag("blogPosts","max");
+        // updateTag("blogPosts")  //Use any one
+    }
   };
 
   return (
@@ -28,15 +61,25 @@ export default function CreateBlogFormServer() {
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="title">Title</FieldLabel>
-              <Input type="text" name="title" id="title" placeholder="Blog Title" required />
+              <Input
+                type="text"
+                name="title"
+                id="title"
+                placeholder="Blog Title"
+                required
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="content">Content</FieldLabel>
-              <Textarea name="content" id="content" placeholder="Write your blog"/>
+              <Textarea
+                name="content"
+                id="content"
+                placeholder="Write your blog"
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="tags">Tags (comma separated)</FieldLabel>
-              <Input name="title" id="tags" placeholder="nextjs, web"/>
+              <Input name="tags" id="tags" placeholder="nextjs, web" />
             </Field>
           </FieldGroup>
         </form>
